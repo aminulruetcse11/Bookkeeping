@@ -1,4 +1,5 @@
-﻿function getData(year) {
+﻿
+function populateData(year) {
     $.ajax({
         type: "GET",
         url: "/Home/GetIncomeCost?Year=" + year,

@@ -7,14 +7,14 @@
     <h1>BOOKKEEPING</h1>
 </div>
 <div class="row" style="margin-bottom:20px">
-        <div class="col-md-2">
-            <select id="ddYear" class="form-control">
-                <option value="0">--select year--</option>
-                <option value="2018">2018</option>
-                <option value="2019">2019</option>
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-            </select>
+    <div class="col-md-2">
+        <select id="ddYear" class="form-control">
+            <option value="0">--select year--</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+        </select>
     </div>
 </div>
 
@@ -42,7 +42,7 @@
             <tbody>
             </tbody>
         </table>
-   
+
     </div>
 </div>
 <div class="row">
@@ -55,8 +55,9 @@
 </div>
 
 <script src="~/Scripts/bookkeeping/bookkeeping.js"></script>
+<script src="~/Scripts/Services/bookkeepingservice.js"></script>
 <script type="text/javascript">
     $(document).on('change', '#ddYear', function () {
-        getData($(this).val());
+        populateData($(this).val());
     });
 </script>
