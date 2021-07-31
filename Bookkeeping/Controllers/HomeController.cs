@@ -20,6 +20,109 @@ namespace Bookkeeping.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public ActionResult Index(FormCollection formCollection)
+        {
+            List<Reconciliation> reconciliations = new List<Reconciliation>();
+            Reconciliation reconciliation = null;
+            try
+            {
+
+                var Incomes = formCollection.AllKeys.Where(k => k.Contains("Income"));
+                int HeadID = 0, counter = 1, month = 0, year = 0;
+                decimal amount = 0m;
+                year = Convert.ToInt32(formCollection["ddYear"]);
+                foreach (var item in Incomes)
+                {
+                    if (item.Contains("Income_Head"))
+                    {
+                        HeadID = Convert.ToInt32(formCollection[item]);
+                        counter = 1;
+                        continue;
+                    }
+                    else
+                        amount = Convert.ToDecimal(formCollection[item]);
+
+
+                    reconciliation = new Reconciliation();
+
+                    reconciliation.HeadID = HeadID;
+                    if (counter == 12)
+                        month = counter;
+                    else
+                        month = counter % 12;
+
+
+                    reconciliation.Date = new DateTime(year, month, 1, 0, 0, 0);
+                    reconciliation.Amount = amount;
+                    if (amount != 0)
+                        reconciliations.Add(reconciliation);
+                    counter++;
+                }
+
+                var expense = formCollection.AllKeys.Where(k => k.Contains("Expense"));
+                HeadID = 0;
+                counter = 1;
+                month = 0;
+                amount = 0m;
+                foreach (var item in expense)
+                {
+                    if (item.Contains("Expense_Head"))
+                    {
+                        HeadID = Convert.ToInt32(formCollection[item]);
+                        counter = 1;
+                        continue;
+                    }
+                    else
+                        amount = Convert.ToDecimal(formCollection[item]);
+
+
+                    reconciliation = new Reconciliation();
+
+                    reconciliation.HeadID = HeadID;
+                    if (counter == 12)
+                        month = counter;
+                    else
+                        month = counter % 12;
+
+
+                    reconciliation.Date = new DateTime(year, month, 1, 0, 0, 0);
+                    reconciliation.Amount = amount;
+                    if (amount != 0)
+                        reconciliations.Add(reconciliation);
+                    counter++;
+                }
+                if (reconciliations.Count() > 0)
+                {
+                    decimal newAmount = 0m;
+                    Reconciliation oldrecon = null;
+                    var olddata = _dbContext.Reconciliations.Where(i => i.Date.Year == year);
+                    foreach (var item in reconciliations)
+                    {
+                        if (olddata.Any(i => i.Date == item.Date && i.HeadID == item.HeadID))
+                        {
+                            oldrecon = olddata.FirstOrDefault(i => i.Date == item.Date && i.HeadID == item.HeadID);
+                            oldrecon.Amount = item.Amount;
+                        }
+                        else
+                        {
+                            _dbContext.Reconciliations.Add(item);
+                        }
+                    }
+
+                    if (_dbContext.SaveChanges() > 0)
+                        ViewBag.msg = "Save successfull";
+                    else
+                        ViewBag.msg = "Save failed.";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.msg = "Save failed." + ex.Message;
+            }
+            return View();
+        }
 
         [HttpGet]
         public JsonResult GetIncomeCost(int Year)
@@ -34,13 +137,14 @@ namespace Bookkeeping.Controllers
 
         }
 
-        private  ReconciliationVM CalculateReconciliationResult(List<ReconciliationVM> reconIncome, List<ReconciliationVM> reconExpense)
+        private ReconciliationVM CalculateReconciliationResult(List<ReconciliationVM> reconIncome, List<ReconciliationVM> reconExpense)
         {
             var reconciliationVM = new ReconciliationVM();
             reconciliationVM.HeadName = "Reconciliation Result";
             decimal Income = 0m, Cost = 0m;
             for (int j = 1; j <= 12; j++)
             {
+
                 Income = 0m;
                 Cost = 0m;
                 foreach (var item in reconIncome)
@@ -92,7 +196,7 @@ namespace Bookkeeping.Controllers
             return exInViewModels;
         }
 
-        private List<ReconciliationVM> GetReconciliationData(int Year,HeadType type)
+        private List<ReconciliationVM> GetReconciliationData(int Year, HeadType type)
         {
             List<ReconciliationVM> reconList = new List<ReconciliationVM>();
             ReconciliationVM reconciliationVM = null;

@@ -1,4 +1,8 @@
-﻿
+﻿$(document).ready(function () {
+    $(document).on('focus', 'input[type="number"]', function () {
+        $(this).select();
+    });
+});
 function populateData(year) {
     $.ajax({
         type: "GET",

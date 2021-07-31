@@ -1,58 +1,78 @@
 ﻿@model List<ExInViewModel>
 @{
     ViewBag.Title = "Home Page";
+
+
 }
 
 <div class="page-header text-center">
     <h1>BOOKKEEPING</h1>
 </div>
-<div class="row" style="margin-bottom:20px">
-    <div class="col-md-2">
-        <select id="ddYear" class="form-control">
-            <option value="0">--select year--</option>
-            <option value="2018">2018</option>
-            <option value="2019">2019</option>
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-        </select>
-    </div>
+@if (ViewBag.msg != null)
+{
+<div class="alert alert-info alert-dismissable">
+    @ViewBag.msg
 </div>
+}
 
-<div class="row">
-    <div class="col-md-12">
-        <table id="exin_table" class="table table-bordered table-striped table-hover">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th>Jan</th>
-                    <th>Feb</th>
-                    <th>Mar</th>
-                    <th>Apr</th>
-                    <th>May</th>
-                    <th>Jun</th>
-                    <th>Jul</th>
-                    <th>Aug</th>
-                    <th>Sep</th>
-                    <th>Oct</th>
-                    <th>Nov</th>
-                    <th>Dec</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @role = "form", @class = "form-horizontal" }))
+{
+    <div class="row" style="margin-bottom:20px">
+        <div class="col-md-2">
+            <select id="ddYear" name="ddYear" class="form-control">
+                <option value="0">--select year--</option>
+                <option value="2018">2018</option>
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+            </select>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <table id="exin_table" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Jan</th>
+                        <th>Feb</th>
+                        <th>Mar</th>
+                        <th>Apr</th>
+                        <th>May</th>
+                        <th>Jun</th>
+                        <th>Jul</th>
+                        <th>Aug</th>
+                        <th>Sep</th>
+                        <th>Oct</th>
+                        <th>Nov</th>
+                        <th>Dec</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <table id="recon_table" class="table table-bordered table-striped table-hover">
-            <tbody>
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="recon_table" class="table table-bordered table-striped table-hover">
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-md-offset-5">
+            <div class="form-group">
+                <input type="submit" class="btn btn-info btn-block" value="Save" />
+            </div>
+        </div>
+    </div>
+
+}
 
 <script src="~/Scripts/bookkeeping/bookkeeping.js"></script>
 <script src="~/Scripts/Services/bookkeepingservice.js"></script>
